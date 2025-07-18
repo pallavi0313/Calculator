@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modern Calculator</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      height: 100vh;
+      background: url('BGM.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    h1 {
+      color: white;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+    }
+
+    .calculator {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      overflow: hidden;
+      width: 300px;
+    }
+
+    .display {
+      background: #4a6fa5;
+      color: white;
+      font-size: 2.5em;
+      text-align: right;
+      padding: 20px;
+    }
+
+    .input-preview {
+      font-size: 0.9em;
+      color: #cfd8dc;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      padding: 15px;
+    }
+
+    button {
+      padding: 20px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 50%;
+      background: #f0f0f0;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button.operator {
+      background: #3f6585;
+      color: white;
+    }
+
+    button.equals {
+      background: #f27f6d;
+      color: white;
+      border-radius: 50%;
+    }
+
+    button:hover {
+      background: #dcdcdc;
+    }
+  </style>
+</head>
+<body>
+  <h1>Calculator</h1>
+  <div class="calculator">
+    <div class="display">
+      <div class="input-preview" id="preview">0</div>
+      <div id="result">0</div>
+    </div>
+    <div class="buttons">
+      <button onclick="input('%')">%</button>
+      <button onclick="clearDisplay()">C</button>
+      <button onclick="backspace()">&larr;</button>
+      <button class="operator" onclick="input('/')">&divide;</button>
+
+      <button onclick="input('7')">7</button>
+      <button onclick="input('8')">8</button>
+      <button onclick="input('9')">9</button>
+      <button class="operator" onclick="input('*')">&times;</button>
+
+      <button onclick="input('4')">4</button>
+      <button onclick="input('5')">5</button>
+      <button onclick="input('6')">6</button>
+      <button class="operator" onclick="input('-')">&minus;</button>
+
+      <button onclick="input('1')">1</button>
+      <button onclick="input('2')">2</button>
+      <button onclick="input('3')">3</button>
+      <button class="operator" onclick="input('+')">+</button>
+
+      <button onclick="toggleSign()">+/-</button>
+      <button onclick="input('0')">0</button>
+      <button onclick="input('.')">.</button>
+      <button class="equals" onclick="calculate()">=</button>
+    </div>
+  </div>
+
+  <script>
+    let expression = '';
+
+    function input(val) {
+      expression += val;
+      document.getElementById('preview').innerText = expression;
+    }
+
+    function clearDisplay() {
+      expression = '';
+      document.getElementById('preview').innerText = '0';
+      document.getElementById('result').innerText = '0';
+    }
+
+    function backspace() {
+      expression = expression.slice(0, -1);
+      document.getElementById('preview').innerText = expression || '0';
+    }
+
+    function calculate() {
+      try {
+        const result = eval(expression.replace('%', '/100'));
+        document.getElementById('result').innerText = result;
+      } catch {
+        document.getElementById('result').innerText = 'Error';
+      }
+    }
+
+    function toggleSign() {
+      if (expression) {
+        if (expression.startsWith('-')) {
+          expression = expression.substring(1);
+        } else {
+          expression = '-' + expression;
+        }
+        document.getElementById('preview').innerText = expression;
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const key = e.key;
+      if ('0123456789.+-*/%'.includes(key)) input(key);
+      if (key === 'Enter') calculate();
+      if (key === 'Backspace') backspace();
+      if (key === 'Escape') clearDisplay();
+    });
+  </script>
+</body>
+</html>
